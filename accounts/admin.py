@@ -15,7 +15,6 @@ class CustomUserChangeForm(UserChangeForm):
         model = User
         fields = ['username', 'role']
 
-
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
@@ -30,6 +29,5 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('username', 'role', 'password1', 'password2'),
         }),
     )
-
 
 admin.site.register(User, CustomUserAdmin)
