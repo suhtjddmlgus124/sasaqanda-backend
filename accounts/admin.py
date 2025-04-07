@@ -24,8 +24,11 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         ('역할', {'fields': ('role',)}),
     )
-    add_fieldsets = UserAdmin.add_fieldsets + (
-        ('역할', {'fields': ('role',)}),
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'role', 'password1', 'password2'),
+        }),
     )
 
 
