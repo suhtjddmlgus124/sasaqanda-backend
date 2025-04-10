@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models.question import Question, SubjectCategory, Tag, TagCategory
+from .models.subject import SubjectCategory
+from .models.tag import TagCategory, Tag
 
 
 class CategoryAdmin(admin.ModelAdmin):
