@@ -1,14 +1,15 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from ..models.question import SubjectCategory, TagCategory
 from ..serializers.question import SubjectCategorySerializer, TagCategorySerializer
+from utils.permission import IsStaffUser
 from utils.response import NOT_FOUND_RESPONSE, SUCCESS_RESPONSE
 
 
 class SubjectCategoryCreateRetrieveUpdateDestroyView(APIView):
-    permission_classes = [ IsAdminUser ]
+    permission_classes = [ IsAuthenticated, IsStaffUser ]
 
     def get(self, request, subject_category_id):
         try:
@@ -56,7 +57,7 @@ class SubjectCategoryCreateRetrieveUpdateDestroyView(APIView):
     
 
 class TagCategoryCreateRetrieveUpdateDestroyView(APIView):
-    permission_classes = [ IsAuthenticated ]
+    permission_classes = [ IsAuthenticated, IsStaffUser ]
 
     def get(self, request, tag_category_id):
         try:
