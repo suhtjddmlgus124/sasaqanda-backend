@@ -5,5 +5,6 @@ from .views import categoryview
 app_name = 'qna'
 
 urlpatterns = [
-    path('category/<int:category_id>/', categoryview.CategoryCreateRetrieveUpdateDestroyView.as_view(), name='category-create-retrieve-update-destroy'),
+    path('subjectcategory/<int:subject_category_id>/', categoryview.SubjectCategoryCreateRetrieveUpdateDestroyView.as_view(), name='subject-category-create-retrieve-update-destroy'),
+    path('tagcategory/<int:tag_category_id>/', categoryview.TagCategoryCreateRetrieveUpdateDestroyView.as_view(), name='tag-category-create-retrieve-update-destroy'),
 ]

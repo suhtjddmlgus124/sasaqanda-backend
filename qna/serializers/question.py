@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models.question import Category, Question, Tag
+from ..models.question import SubjectCategory, TagCategory, Question, Tag
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -8,20 +8,20 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = []
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class SubjectCategorySerializer(serializers.ModelSerializer):
     breadcrum = serializers.SerializerMethodField()
     subcategories = serializers.SerializerMethodField()
     questions = serializers.SerializerMethodField()
 
     class Meta:
-        model = Category
-        fields = ['id', 'name', 'parent', 'subcategories', 'questions', 'breadcrum']
+        model = SubjectCategory
+        fields = ['id', 'name', 'parent', 'subcategories', 'questions', 'breadcrumb']
 
-    def get_breadcrum(self, obj):
+    def get_breadcrumb(self, obj):
         ret = [{'id': obj.id, 'name': obj.name}]
         parent = obj.parent
         while parent:
-            ret.insert(0, {'id':parent.id, 'name':parent.name})
+            ret.insert(0, {'id': parent.id, 'name': parent.name})
             parent = parent.parent
         return ret
     
@@ -35,6 +35,36 @@ class CategorySerializer(serializers.ModelSerializer):
         ret = []
         for question in obj.questions.all():
             ret.append({'id': question.id})
+        return ret
+
+
+class TagCategorySerializer(serializers.ModelSerializer):
+    breadcrumb = serializers.SerializerMethodField()
+    subcategories = serializers.SerializerMethodField()
+    tags = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TagCategory
+        fields = ['id', 'name', 'parent', 'subcategories', 'tags', 'breadcrumb']
+
+    def get_breadcrumb(self, obj):
+        ret = [{'id': obj.id, 'name': obj.name}]
+        parent = obj.parent
+        while parent:
+            ret.insert(0, {'id': parent.id, 'name': parent.name})
+            parent = parent.parent
+        return ret
+    
+    def get_subcategories(self, obj):
+        ret = []
+        for tag_category in obj.subcategories.all():
+            ret.append({'id': tag_category.id, 'name': tag_category.name})
+        return ret
+    
+    def get_tags(self, obj):
+        ret = []
+        for tag in obj.tags.all():
+            ret.append({'id': tag.id, 'name': tag.name})
         return ret
 
 
