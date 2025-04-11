@@ -33,13 +33,13 @@ class SubjectCategoryCreateRetrieveUpdateDestroyView(APIView):
         serializer.save(parent=subject_category)
         return Response(serializer.data, status.HTTP_201_CREATED)
     
-    def put(self, request, subject_category_id):
+    def patch(self, request, subject_category_id):
         try:
             subject_category = SubjectCategory.objects.get(id=subject_category_id)
         except SubjectCategory.DoesNotExist:
             return NOT_FOUND_RESPONSE
         
-        serializer = SubjectCategorySerializer(subject_category, data=request.data)
+        serializer = SubjectCategorySerializer(subject_category, data=request.data, partial=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
         

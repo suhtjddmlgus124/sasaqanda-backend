@@ -42,13 +42,13 @@ class TagCategoryCreateRetrieveUpdateDestroyView(APIView):
         serializer.save(parent=tag_category)
         return Response(serializer.data, status.HTTP_201_CREATED)
     
-    def put(self, request, tag_category_id):
+    def patch(self, request, tag_category_id):
         try:
             tag_category = TagCategory.objects.get(id=tag_category_id)
         except TagCategory.DoesNotExist:
             return NOT_FOUND_RESPONSE
         
-        serializer = TagCategorySerializer(tag_category, data=request.data)
+        serializer = TagCategorySerializer(tag_category, data=request.data, partial=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
         
