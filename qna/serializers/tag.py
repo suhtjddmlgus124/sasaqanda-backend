@@ -16,6 +16,11 @@ class TagCategorySerializer(serializers.ModelSerializer):
         model = TagCategory
         fields = ['id', 'name', 'parent', 'subcategories', 'tags', 'breadcrumb']
 
+    def validate_parent(self, value):
+        if value == self.instance:
+            raise serializers.ValidationError("parent는 자신이 될 수 없습니다")
+        return value
+
     def get_breadcrumb(self, obj):
         ret = [{'id': obj.id, 'name': obj.name}]
         parent = obj.parent

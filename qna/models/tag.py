@@ -1,9 +1,14 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 class TagCategory(models.Model):
     name = models.CharField(max_length=100)
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='subcategories')
+
+    def clean_parent(self):
+        if self.parent == self:
+            raise ValidationError("parent는 자신이 될 수 없습니다")
 
     def get_breadcrumb(self):
         ret = [{'id': self.id, 'name': self.name}]
