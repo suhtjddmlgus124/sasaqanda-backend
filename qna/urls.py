@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import subjectview, tagview
+from .views import subjectview, tagview, questionview
 
 
 app_name = 'qna'
@@ -12,4 +12,7 @@ urlpatterns = [
     path('tagcategory/<int:tag_category_id>/createtag/', tagview.TagCreateView.as_view(), name='tag-create'),
 
     path('tag/<int:tag_id>/', tagview.TagRetrieveUpdateDeleteView.as_view(), name='tag-retrieve-update-delete'),
+
+    path('question/', questionview.QuestionCreateView.as_view(), name='question-create'),
+    path('question/<int:question_id>/', questionview.QuestionRetrieveDeleteView.as_view(), name='question-retrieve-delete'),
 ]

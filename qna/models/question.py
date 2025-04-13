@@ -1,15 +1,33 @@
 from django.db import models
+from django.utils import timezone
+import os
+import uuid
 from .subject import SubjectCategory
 from .tag import Tag
 from accounts.models import User
+from ..api import ocr
 
+
+def question_upload(instance, filename):
+    ext = filename.split('.')[-1]
+    today = timezone.now().strftime("%Y/%m/%d")
+    name = f"{uuid.uuid4().hex}.{ext}"
+    return os.path.join('questions', today, name)
 
 class Question(models.Model):
-    subject_category = models.ForeignKey(SubjectCategory, on_delete=models.PROTECT, related_name='questions')
+    subject_category = models.ForeignKey(SubjectCategory, on_delete=models.PROTECT, null=True, related_name='questions')
+    image = models.ImageField(upload_to=question_upload)
+    content = models.TextField(blank=True)
+    vector = models.JSONField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
-    image = models.ImageField()
-    content = models.TextField()
-    vector = models.JSONField()
+    def get_content(self):
+        data = ocr.call_ocr_api(self.image.open("rb"))
+        if data["status"] == 200:
+            self.content = data["text"]
+
+    def get_vector(self):
+        ...
 
 
 class TagEnrollment(models.Model):

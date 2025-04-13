@@ -3,7 +3,7 @@ from ..models.subject import SubjectCategory
 
 
 class SubjectCategorySerializer(serializers.ModelSerializer):
-    breadcrum = serializers.SerializerMethodField()
+    breadcrumb = serializers.SerializerMethodField()
     subcategories = serializers.SerializerMethodField()
     questions = serializers.SerializerMethodField()
 
