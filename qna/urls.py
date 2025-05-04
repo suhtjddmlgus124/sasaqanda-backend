@@ -16,4 +16,5 @@ urlpatterns = [
     path('question/', questionview.QuestionCreateView.as_view(), name='question-create'),
     path('question/<int:question_id>/', questionview.QuestionRetrieveDeleteView.as_view(), name='question-retrieve-delete'),
     path('question/search/', questionview.QuestionSearchView.as_view(), name='question-search'),
+    path('question/imageconvert/', questionview.QuestionImageConvertView.as_view(), name='question-image-convert'),
 ]

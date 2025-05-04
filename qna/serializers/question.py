@@ -11,7 +11,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = ['id', 'subject_category', 'image', 'content']
 
 
-class QuestionSearchSerializer(serializers.Serializer):
+class QuestionImageSerializer(serializers.Serializer):
     image = serializers.ImageField()
 
     def validate_image(self, value):

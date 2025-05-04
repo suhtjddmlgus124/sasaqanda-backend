@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.parsers import MultiPartParser
 from ..models.question import Question
-from ..serializers.question import QuestionSerializer, QuestionSearchSerializer
+from ..serializers.question import QuestionSerializer, QuestionImageSerializer
 from utils.response import NOT_FOUND_RESPONSE, SUCCESS_RESPONSE
 import Levenshtein
 from ..api import ocr
@@ -44,14 +44,25 @@ class QuestionCreateView(APIView):
         new_question.get_content()
         new_question.save()
         return Response(QuestionSerializer(new_question).data, status.HTTP_201_CREATED)
-    
+
 
 class QuestionSearchView(APIView):
+    permission_classes = [ AllowAny ]
+
+    def post(self, request):
+        search = request.data.get('search')
+        questions = Question.objects.all()
+        sorted_questions = sorted(list(questions), key=lambda x: Levenshtein.ratio(x.content, search), reverse=True)
+        serializer = QuestionSerializer(sorted_questions, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
+
+
+class QuestionImageConvertView(APIView):
     permission_classes = [ AllowAny ]
     parser_classes = [ MultiPartParser ]
 
     def post(self, request):
-        serializer = QuestionSearchSerializer(data=request.data)
+        serializer = QuestionImageSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
         
@@ -60,10 +71,4 @@ class QuestionSearchView(APIView):
         if data["status"] != 200:
             return Response({'detail':'OCR 호출 실패'}, status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-        questions = Question.objects.all()
-        sorted_questions = sorted(list(questions), key=lambda x: Levenshtein.ratio(x.content, data["text"]), reverse=True)
-        serializer = QuestionSerializer(sorted_questions, many=True)
-        return Response(serializer.data, status.HTTP_200_OK)
-    
-
-        
+        return Response({'content': data["text"]}, status.HTTP_200_OK)
