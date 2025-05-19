@@ -1,5 +1,7 @@
 from django.urls import path
-from .views import subjectview, tagview, questionview
+from .views import subjectview, tagview, questionview, solutionview
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 app_name = 'qna'
@@ -17,4 +19,10 @@ urlpatterns = [
     path('question/<int:question_id>/', questionview.QuestionRetrieveDeleteView.as_view(), name='question-retrieve-delete'),
     path('question/search/', questionview.QuestionSearchView.as_view(), name='question-search'),
     path('question/imageconvert/', questionview.QuestionImageConvertView.as_view(), name='question-image-convert'),
+
+    path('question/<int:question_id>/teachersolution/', solutionview.TeacherSolutionCreateView.as_view(), name='teacher-solution-create'),
+    path('teachersolution/<int:solution_id>/', solutionview.TeacherSolutionRetrieveView.as_view(), name='teacher-solution-retrieve'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document=settings.MEDIA_ROOT)
