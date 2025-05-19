@@ -27,6 +27,16 @@ class TeacherSolutionCreateView(APIView):
     permission_classes = [ AllowAny ]
     parser_classes = [ MultiPartParser ]
 
+    def get(self, request, question_id):
+        try:
+            question = Question.objects.get(id=question_id)
+        except Question.DoesNotExist:
+            return NOT_FOUND_RESPONSE
+        
+        teacher_solutions = question.teacher_solutions
+        serializer = TeacherSolutionSerializer(teacher_solutions, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
+
     def post(self, request, question_id):
         try:
             question = Question.objects.get(id=question_id)
