@@ -6,6 +6,7 @@ from .subject import SubjectCategory
 from .tag import Tag
 from accounts.models import User
 from ..api import ocr
+from ..api import gpt
 
 
 def question_upload(instance, filename):
@@ -27,7 +28,8 @@ class Question(models.Model):
             self.content = data["text"]
 
     def get_vector(self):
-        ...
+        vector = gpt.call_gpt_api(self.content)
+        self.vector = vector
 
 
 class TagEnrollment(models.Model):

@@ -42,6 +42,7 @@ class QuestionCreateView(APIView):
         
         new_question = Question(**serializer.validated_data)
         new_question.get_content()
+        new_question.get_vector()
         new_question.save()
         return Response(QuestionSerializer(new_question).data, status.HTTP_201_CREATED)
 
@@ -69,6 +70,6 @@ class QuestionImageConvertView(APIView):
         image = serializer.validated_data.get('image')
         data = ocr.call_ocr_api(image.open("rb"))
         if data["status"] != 200:
-            return Response({'detail':'OCR 호출 실패'}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'detail': data["error"]}, status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         return Response({'content': data["text"]}, status.HTTP_200_OK)

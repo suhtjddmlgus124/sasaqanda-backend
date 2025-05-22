@@ -33,5 +33,5 @@ def call_ocr_api(file):
             "status": response.status_code,
             "confidence": 0,
             "confidence_rate": 0,
-            "text": "",
+            "error": data["error"],
         }
