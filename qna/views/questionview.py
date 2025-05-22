@@ -53,7 +53,8 @@ class QuestionSearchView(APIView):
     def post(self, request):
         search = request.data.get('search')
         questions = Question.objects.all()
-        sorted_questions = sorted(list(questions), key=lambda x: Levenshtein.ratio(x.content, search), reverse=True)
+        questions_list = list(questions)
+        sorted_questions = sorted(questions_list, key=lambda x: Levenshtein.ratio(x.content, search), reverse=True)
         serializer = QuestionSerializer(sorted_questions, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
 
