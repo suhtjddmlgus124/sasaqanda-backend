@@ -20,8 +20,10 @@ urlpatterns = [
     path('question/search/', questionview.QuestionSearchView.as_view(), name='question-search'),
     path('question/imageconvert/', questionview.QuestionImageConvertView.as_view(), name='question-image-convert'),
 
-    path('question/<int:question_id>/teachersolution/', solutionview.TeacherSolutionCreateView.as_view(), name='teacher-solution-create'),
+    path('question/<int:question_id>/teachersolution/', solutionview.TeacherSolutionListCreateView.as_view(), name='teacher-solution-list-create'),
     path('teachersolution/<int:solution_id>/', solutionview.TeacherSolutionRetrieveView.as_view(), name='teacher-solution-retrieve'),
+    path('question/<int:question_id>/studentsolution/', solutionview.StudentSolutionListCreateView.as_view(), name='student-solution-list-create'),
+    path('studentsolution/<int:solution_id>/', solutionview.StudentSolutionRetrieveView.as_view(), name='student-solution-retrieve'),
 ]
 
 if settings.DEBUG:
