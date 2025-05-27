@@ -63,7 +63,16 @@ class TagCategoryCreateRetrieveUpdateDestroyView(APIView):
         
         tag_category.delete()
         return SUCCESS_RESPONSE
-    
+
+
+class TagListView(APIView):
+    permission_classes = [ IsAuthenticated, IsStaffUser ]
+
+    def get(self, request):
+        tags = Tag.objects.all()
+        serializer = TagSerializer(tags, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
+
 
 class TagCreateView(APIView):
     permission_classes = [ IsAuthenticated, IsStaffUser ]

@@ -79,6 +79,8 @@ class StudentSolutionListCreateView(APIView):
         return Response(serializer.data, status.HTTP_200_OK)
     
     def post(self, request, question_id):
+        user = request.user
+
         try:
             question = Question.objects.get(id=question_id)
         except Question.DoesNotExist:
@@ -88,5 +90,6 @@ class StudentSolutionListCreateView(APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
         
-        serializer.save(question=question, author=request.user)
+        serializer.save(question=question, author=user)
+        user.mastery += 1; user.save()
         return Response(serializer.data, status.HTTP_201_CREATED)

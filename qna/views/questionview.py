@@ -64,12 +64,17 @@ class QuestionImageConvertView(APIView):
     parser_classes = [ MultiPartParser ]
 
     def post(self, request):
+        user = request.user
+        if user.token <= 0:
+            return Response({'detail': '토큰이 부족합니다'}, status.HTTP_403_FORBIDDEN)
+
         serializer = QuestionImageSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
         
         image = serializer.validated_data.get('image')
         data = ocr.call_ocr_api(image.open("rb"))
+        user.token -= 1; user.save()
         if data["status"] != 200:
             return Response({'detail': data["error"]}, status.HTTP_500_INTERNAL_SERVER_ERROR)
         

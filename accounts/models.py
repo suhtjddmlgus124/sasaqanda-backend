@@ -10,6 +10,8 @@ class User(AbstractUser):
     ]
 
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
+    token = models.IntegerField(default=100)
+    mastery = models.IntegerField(default=0)
 
     def __str__(self):
         return f"[{self.get_role_display()}] {self.username}"
