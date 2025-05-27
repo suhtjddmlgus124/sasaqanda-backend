@@ -22,6 +22,7 @@ class CustomUserAdmin(UserAdmin):
 
     fieldsets = UserAdmin.fieldsets + (
         ('역할', {'fields': ('role',)}),
+        ('토큰 및 내공', {'fields': ('token', 'mastery')})
     )
     add_fieldsets = (
         (None, {
