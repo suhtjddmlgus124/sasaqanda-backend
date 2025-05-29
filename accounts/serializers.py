@@ -29,4 +29,4 @@ from .models import User
 class UserIdentitySerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'role']
+        fields = ['id', 'username', 'role', 'token', 'mastery']
