@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('qna/', include('qna.urls')),
+    path('bulletinboard/', include('bulletinboard.urls')),
 ]
 
 if settings.DEBUG:

@@ -1,7 +1,5 @@
 from django.urls import path
 from .views import subjectview, tagview, questionview, solutionview
-from django.conf import settings
-from django.conf.urls.static import static
 
 
 app_name = 'qna'
@@ -26,6 +24,3 @@ urlpatterns = [
     path('question/<int:question_id>/studentsolution/', solutionview.StudentSolutionListCreateView.as_view(), name='student-solution-list-create'),
     path('studentsolution/<int:solution_id>/', solutionview.StudentSolutionRetrieveDestroyView.as_view(), name='student-solution-retrieve'),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document=settings.MEDIA_ROOT)
