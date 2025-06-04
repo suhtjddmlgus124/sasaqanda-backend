@@ -16,7 +16,7 @@ class AnnouncementListCreateView(APIView):
         return Response(serializer.data, status.HTTP_200_OK)
     
     def post(self, request):
-        serializer = AnnouncementSerializer(request.data)
+        serializer = AnnouncementSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
         
