@@ -50,14 +50,15 @@ class QuestionSearchView(APIView):
     permission_classes = [ IsAuthenticated ]
 
     def post(self, request):
+        HIGHEST_ACCURATE_QUESTION_COUNT = 50
         WEIGHT_COEFFICIENT = 1.2
 
         search = request.data.get('search')
         questions = Question.objects.all()
 
         calculated_list = [(q, Levenshtein.ratio(q.content, search)) for q in questions]
-        average_accuracy = sum([x[1] for x in calculated_list])/len(calculated_list)
-        sorted_list = sorted(calculated_list, key=lambda x: x[1], reverse=True)
+        sorted_list = sorted(calculated_list, key=lambda x: x[1], reverse=True)[:HIGHEST_ACCURATE_QUESTION_COUNT]
+        average_accuracy = sum([x[1] for x in sorted_list])/HIGHEST_ACCURATE_QUESTION_COUNT
         filtered_list = filter(lambda x: x[1] >= average_accuracy*WEIGHT_COEFFICIENT, sorted_list)
         filtered_questions = [x[0] for x in filtered_list]
 
