@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from ..models import User
-from ..serializers import UserPublicSerializer
+from accounts.models import User
+from accounts.serializers import UserPublicSerializer
 
 
 class ScoreboardView(APIView):

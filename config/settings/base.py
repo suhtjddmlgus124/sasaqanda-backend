@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'accounts',
     'qna',
-    'bulletinboard',
+    'community',
 ]
 
 MIDDLEWARE = [
