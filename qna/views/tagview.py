@@ -2,10 +2,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
 from ..models.tag import TagCategory, Tag
 from ..serializers.tag import TagCategoryListSerializer, TagCategorySerializer, TagSerializer
 from utils.permission import IsStaffUser
-from utils.response import NOT_FOUND_RESPONSE, SUCCESS_RESPONSE
+from utils.response import SUCCESS_RESPONSE
 
 
 class TagCategoryListView(APIView):
@@ -21,20 +22,12 @@ class TagCategoryCreateRetrieveUpdateDestroyView(APIView):
     permission_classes = [ IsAuthenticated, IsStaffUser ]
 
     def get(self, request, tag_category_id):
-        try:
-            tag_category = TagCategory.objects.get(id=tag_category_id)
-        except TagCategory.DoesNotExist:
-            return NOT_FOUND_RESPONSE
-        
+        tag_category = get_object_or_404(TagCategory, id=tag_category_id)
         serializer = TagCategorySerializer(tag_category)
         return Response(serializer.data, status.HTTP_200_OK)
     
     def post(self, request, tag_category_id):
-        try:
-            tag_category = TagCategory.objects.get(id=tag_category_id)
-        except TagCategory.DoesNotExist:
-            return NOT_FOUND_RESPONSE
-        
+        tag_category = get_object_or_404(TagCategory, id=tag_category_id)
         serializer = TagCategorySerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
@@ -43,11 +36,7 @@ class TagCategoryCreateRetrieveUpdateDestroyView(APIView):
         return Response(serializer.data, status.HTTP_201_CREATED)
     
     def patch(self, request, tag_category_id):
-        try:
-            tag_category = TagCategory.objects.get(id=tag_category_id)
-        except TagCategory.DoesNotExist:
-            return NOT_FOUND_RESPONSE
-        
+        tag_category = get_object_or_404(TagCategory, id=tag_category_id)
         serializer = TagCategorySerializer(tag_category, data=request.data, partial=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
@@ -56,11 +45,7 @@ class TagCategoryCreateRetrieveUpdateDestroyView(APIView):
         return Response(serializer.data, status.HTTP_200_OK)
     
     def delete(self, request, tag_category_id):
-        try:
-            tag_category = TagCategory.objects.get(id=tag_category_id)
-        except TagCategory.DoesNotExist:
-            return NOT_FOUND_RESPONSE
-        
+        tag_category = get_object_or_404(TagCategory, id=tag_category_id)
         tag_category.delete()
         return SUCCESS_RESPONSE
 
@@ -78,11 +63,7 @@ class TagCreateView(APIView):
     permission_classes = [ IsAuthenticated, IsStaffUser ]
 
     def post(self, request, tag_category_id):
-        try:
-            tag_category = TagCategory.objects.get(id=tag_category_id)
-        except TagCategory.DoesNotExist:
-            return NOT_FOUND_RESPONSE
-        
+        tag_category = get_object_or_404(TagCategory, id=tag_category_id)
         serializer = TagSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
@@ -95,20 +76,12 @@ class TagRetrieveUpdateDeleteView(APIView):
     permission_classes = [ IsAuthenticated, IsStaffUser ]
 
     def get(self, request, tag_id):
-        try:
-            tag = Tag.objects.get(id=tag_id)
-        except Tag.DoesNotExist:
-            return NOT_FOUND_RESPONSE
-        
+        tag = get_object_or_404(Tag, id=tag_id)
         serializer = TagSerializer(tag)
         return Response(serializer.data, status.HTTP_200_OK)
     
     def patch(self, request, tag_id):
-        try:
-            tag = Tag.objects.get(id=tag_id)
-        except Tag.DoesNotExist:
-            return NOT_FOUND_RESPONSE
-        
+        tag = get_object_or_404(Tag, id=tag_id)
         serializer = TagSerializer(tag, data=request.data, partial=True)
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
@@ -117,10 +90,6 @@ class TagRetrieveUpdateDeleteView(APIView):
         return Response(serializer.data, status.HTTP_200_OK)
     
     def delete(self, request, tag_id):
-        try:
-            tag = Tag.objects.get(id=tag_id)
-        except Tag.DoesNotExist:
-            return NOT_FOUND_RESPONSE
-        
+        tag = get_object_or_404(Tag, id=tag_id)
         tag.delete()
         return SUCCESS_RESPONSE

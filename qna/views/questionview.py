@@ -3,9 +3,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser
+from django.shortcuts import get_object_or_404
 from ..models.question import Question
 from ..serializers.question import QuestionSerializer, QuestionImageSerializer
-from utils.response import NOT_FOUND_RESPONSE, SUCCESS_RESPONSE, STAFF_ONLY_RESPONSE
+from utils.response import SUCCESS_RESPONSE, STAFF_ONLY_RESPONSE
 import Levenshtein
 from ..api import ocr
 
@@ -14,11 +15,7 @@ class QuestionRetrieveDestroyView(APIView):
     permission_classes = [ IsAuthenticated ]
 
     def get(self, request, question_id):
-        try:
-            question = Question.objects.get(id=question_id)
-        except Question.DoesNotExist:
-            return NOT_FOUND_RESPONSE
-        
+        question = get_object_or_404(Question, id=question_id)
         serializer = QuestionSerializer(question)
         return Response(serializer.data, status.HTTP_200_OK)
     
@@ -27,11 +24,7 @@ class QuestionRetrieveDestroyView(APIView):
         if user.role != 'STAFF':
             return STAFF_ONLY_RESPONSE
 
-        try:
-            question = Question.objects.get(id=question_id)
-        except Question.DoesNotExist:
-            return NOT_FOUND_RESPONSE
-        
+        question = get_object_or_404(Question, id=question_id)
         question.delete()
         return SUCCESS_RESPONSE
 

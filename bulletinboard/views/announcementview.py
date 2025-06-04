@@ -27,13 +27,8 @@ class AnnouncementListCreateView(APIView):
 class AnnouncementRetrieveView(APIView):
     permission_classes = [ IsAuthenticated ]
     
-    @staticmethod
-    def get_announcement_or_404(id):
-        announcement = get_object_or_404(Announcement, id=id, is_show=True)
-        return announcement
-    
     def get(self, request, announcement_id):
-        announcement = self.get_announcement_or_404(announcement_id)
+        announcement = get_object_or_404(Announcement, id=announcement_id, is_show=True)
         serializer = AnnouncementSerializer(announcement)
         return Response(serializer.data, status.HTTP_200_OK)
     
