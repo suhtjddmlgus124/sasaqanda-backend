@@ -1,9 +1,11 @@
+import Levenshtein.StringMatcher
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser
 from django.shortcuts import get_object_or_404
+from bisect import bisect_left
 from ..models.question import Question
 from ..serializers.question import QuestionSerializer, QuestionImageSerializer
 from utils.response import SUCCESS_RESPONSE, STAFF_ONLY_RESPONSE
@@ -48,11 +50,20 @@ class QuestionSearchView(APIView):
     permission_classes = [ IsAuthenticated ]
 
     def post(self, request):
+        WEIGHT_COEFFICIENT = 1.2
+
         search = request.data.get('search')
         questions = Question.objects.all()
-        questions_list = list(questions)
-        sorted_questions = sorted(questions_list, key=lambda x: Levenshtein.ratio(x.content, search), reverse=True)
-        serializer = QuestionSerializer(sorted_questions, many=True)
+
+        calculated_list = [(q, Levenshtein.ratio(q.content, search)) for q in questions]
+        average_accuracy = sum([x[1] for x in calculated_list])/len(calculated_list)
+        sorted_list = sorted(calculated_list, key=lambda x: x[1], reverse=True)
+        filtered_list = filter(lambda x: x[1] >= average_accuracy*WEIGHT_COEFFICIENT, sorted_list)
+        filtered_questions = [x[0] for x in filtered_list]
+
+        print(calculated_list, average_accuracy)
+
+        serializer = QuestionSerializer(filtered_questions, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
 
 
