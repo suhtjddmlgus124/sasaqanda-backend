@@ -11,7 +11,7 @@ class AnnouncementListCreateView(APIView):
     permission_classes = [ IsAuthenticated ]
 
     def get(self, request):
-        announcements = Announcement.objects.filter(is_show=True)
+        announcements = Announcement.objects.filter(is_show=True).order_by('-created_at')
         serializer = AnnouncementSerializer(announcements, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
     

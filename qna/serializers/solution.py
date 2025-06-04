@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from ..models.solution import TeacherSolution, StudentSolution
-from accounts.serializers import UserIdentitySerializer
+from accounts.serializers import UserPublicSerializer
 import os
 
 
@@ -23,7 +23,7 @@ class TeacherSolutionSerializer(serializers.ModelSerializer):
 
 class StudentSolutionSerializer(serializers.ModelSerializer):
     question = serializers.SerializerMethodField()
-    author = UserIdentitySerializer(required=False)
+    author = UserPublicSerializer(required=False)
 
     class Meta:
         model = StudentSolution
