@@ -50,21 +50,20 @@ class QuestionSearchView(APIView):
     permission_classes = [ IsAuthenticated ]
 
     def post(self, request):
-        HIGHEST_ACCURATE_QUESTION_COUNT = 50
-        WEIGHT_COEFFICIENT = 1.2
+        HIGHEST_ACCURATE_QUESTION_COUNT = 7
+        # WEIGHT_COEFFICIENT = 1.2
 
         search = request.data.get('search')
         questions = Question.objects.all()
 
-        calculated_list = [(q, Levenshtein.ratio(q.content, search)) for q in questions]
-        sorted_list = sorted(calculated_list, key=lambda x: x[1], reverse=True)[:HIGHEST_ACCURATE_QUESTION_COUNT]
-        average_accuracy = sum([x[1] for x in sorted_list])/HIGHEST_ACCURATE_QUESTION_COUNT
-        filtered_list = filter(lambda x: x[1] >= average_accuracy*WEIGHT_COEFFICIENT, sorted_list)
-        filtered_questions = [x[0] for x in filtered_list]
+        # calculated_list = [(q, Levenshtein.ratio(q.content, search)) for q in questions]
+        # sorted_list = sorted(calculated_list, key=lambda x: x[1], reverse=True)[:HIGHEST_ACCURATE_QUESTION_COUNT]
+        # average_accuracy = sum([x[1] for x in sorted_list])/HIGHEST_ACCURATE_QUESTION_COUNT
+        # filtered_list = filter(lambda x: x[1] >= average_accuracy*WEIGHT_COEFFICIENT, sorted_list)
+        # filtered_questions = [x[0] for x in filtered_list]
 
-        print(calculated_list, average_accuracy)
-
-        serializer = QuestionSerializer(filtered_questions, many=True)
+        sorted_list = sorted(questions, key=lambda q: Levenshtein.ratio(q.content, search), reverse=True)[:HIGHEST_ACCURATE_QUESTION_COUNT]
+        serializer = QuestionSerializer(sorted_list, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
 
 
