@@ -6,11 +6,12 @@ from ..models.tag import Tag
 
 class QuestionSerializer(serializers.ModelSerializer):
     content = serializers.CharField(read_only=True)
-    tags = serializers.SlugRelatedField(many=True, slug_field='name', queryset=Tag.objects.all())
+    # tags = serializers.SlugRelatedField(many=True, slug_field='name', queryset=Tag.objects.all())
     
     class Meta:
         model = Question
-        fields = ['id', 'subject_category', 'image', 'content', 'tags']
+        # fields = ['id', 'subject_category', 'image', 'content', 'tags']
+        fields = ['id', 'subject_category', 'image', 'content', 'content']
 
     def validate_image(self, value):
         ext = os.path.splitext(value.name)[1].lower()
