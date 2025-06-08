@@ -90,5 +90,7 @@ class StudentSolutionListCreateView(APIView):
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
         
         serializer.save(question=question, author=user)
-        user.mastery += 1; user.save()
+        user.mastery += 1 
+        user.token += 1
+        user.save()
         return Response(serializer.data, status.HTTP_201_CREATED)
