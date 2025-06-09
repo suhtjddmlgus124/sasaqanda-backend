@@ -11,7 +11,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         # fields = ['id', 'subject_category', 'image', 'content', 'tags']
-        fields = ['id', 'subject_category', 'image', 'content', 'content']
+        fields = ['id', 'subject_category', 'image', 'content']
 
     def validate_image(self, value):
         ext = os.path.splitext(value.name)[1].lower()

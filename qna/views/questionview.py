@@ -5,7 +5,6 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser
 from django.shortcuts import get_object_or_404
-from bisect import bisect_left
 from ..models.question import Question
 from ..serializers.question import QuestionSerializer, QuestionImageSerializer
 from utils.response import SUCCESS_RESPONSE, STAFF_ONLY_RESPONSE
