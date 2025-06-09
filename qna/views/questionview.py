@@ -34,6 +34,7 @@ class QuestionCreateView(APIView):
     permission_classes = [ IsAuthenticated ]
 
     def post(self, request):
+        user = request.user
         serializer = QuestionSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
@@ -42,6 +43,8 @@ class QuestionCreateView(APIView):
         new_question.get_content()
         new_question.get_vector()
         new_question.save()
+        user.mastery += 1
+        user.save()
         return Response(QuestionSerializer(new_question).data, status.HTTP_201_CREATED)
 
 
