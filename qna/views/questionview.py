@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import MultiPartParser
 from django.shortcuts import get_object_or_404
+from django.db.models import Count, Q
 from ..models.question import Question
 from ..serializers.question import QuestionSerializer, QuestionImageSerializer
 from utils.response import SUCCESS_RESPONSE, STAFF_ONLY_RESPONSE
@@ -47,7 +48,7 @@ class QuestionCreateView(APIView):
         new_question.get_content()
         new_question.get_vector()
         new_question.save()
-        new_question.tags.set(tags); print(tags)
+        new_question.tags.set(tags)
         user.mastery += 1
         user.save()
         return Response(QuestionSerializer(new_question).data, status.HTTP_201_CREATED)
@@ -61,7 +62,17 @@ class QuestionSearchView(APIView):
         # WEIGHT_COEFFICIENT = 1.2
 
         search = request.data.get('search')
-        questions = Question.objects.all()
+        tags = request.data.get('tags')
+
+        if tags:
+            questions = Question.objects.annotate(
+                matched_tags=Count('tags', filter=Q(tags__name__in=tags), distinct=True), 
+                total_tags=Count('tags', distinct=True)
+            ).filter(
+                matched_tags=len(tags),
+            )
+        else:
+            questions = Question.objects.all()
 
         # calculated_list = [(q, Levenshtein.ratio(q.content, search)) for q in questions]
         # sorted_list = sorted(calculated_list, key=lambda x: x[1], reverse=True)[:HIGHEST_ACCURATE_QUESTION_COUNT]
