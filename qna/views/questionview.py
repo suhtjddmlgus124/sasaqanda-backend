@@ -41,7 +41,7 @@ class QuestionCreateView(APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
         
-        validated_data = serializer.validated_data; print(validated_data)
+        validated_data = serializer.validated_data
         tags = validated_data.pop('tags', [])
         
         new_question = Question(**serializer.validated_data)
