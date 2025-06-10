@@ -51,7 +51,7 @@ class TagCategoryCreateRetrieveUpdateDestroyView(APIView):
 
 
 class TagListView(APIView):
-    permission_classes = [ IsAuthenticated, IsStaffUser ]
+    permission_classes = [ IsAuthenticated ]
 
     def get(self, request):
         tags = Tag.objects.all()
