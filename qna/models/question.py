@@ -32,6 +32,9 @@ class Question(models.Model):
         vector = gpt.call_gpt_api(self.content)
         self.vector = vector
 
+    def __str__(self):
+        return f"{self.id}번 문제"
+
 
 # class TagEnrollment(models.Model):
 #     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='tags')
