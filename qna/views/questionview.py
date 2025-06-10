@@ -32,6 +32,7 @@ class QuestionRetrieveDestroyView(APIView):
 
 class QuestionCreateView(APIView):
     permission_classes = [ IsAuthenticated ]
+    parser_classes = [ MultiPartParser ]
 
     def post(self, request):
         user = request.user
@@ -39,10 +40,14 @@ class QuestionCreateView(APIView):
         if not serializer.is_valid():
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
         
+        validated_data = serializer.validated_data; print(validated_data)
+        tags = validated_data.pop('tags', [])
+        
         new_question = Question(**serializer.validated_data)
         new_question.get_content()
         new_question.get_vector()
         new_question.save()
+        new_question.tags.set(tags); print(tags)
         user.mastery += 1
         user.save()
         return Response(QuestionSerializer(new_question).data, status.HTTP_201_CREATED)

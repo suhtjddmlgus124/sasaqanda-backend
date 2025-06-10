@@ -21,6 +21,7 @@ class Question(models.Model):
     content = models.TextField(blank=True)
     vector = models.JSONField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    tags = models.ManyToManyField(Tag, related_name='questions')
 
     def get_content(self):
         data = ocr.call_ocr_api(self.image.open("rb"))
@@ -32,9 +33,9 @@ class Question(models.Model):
         self.vector = vector
 
 
-class TagEnrollment(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='tags')
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='questions')
+# class TagEnrollment(models.Model):
+#     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='tags')
+#     tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='questions')
 
 
 class StarEnrollment(models.Model):
