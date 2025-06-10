@@ -1,4 +1,3 @@
-import Levenshtein.StringMatcher
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -10,7 +9,8 @@ from ..models.question import Question
 from ..serializers.question import QuestionSerializer, QuestionImageSerializer
 from utils.response import SUCCESS_RESPONSE, STAFF_ONLY_RESPONSE
 import Levenshtein
-from ..api import ocr
+from sklearn.metrics.pairwise import cosine_similarity
+from ..api import ocr, gpt
 
 
 class QuestionRetrieveDestroyView(APIView):
@@ -63,6 +63,7 @@ class QuestionSearchView(APIView):
 
         search = request.data.get('search')
         tags = request.data.get('tags')
+        method = request.data.get('method', 'edit')
 
         if tags:
             questions = Question.objects.annotate(
@@ -80,7 +81,14 @@ class QuestionSearchView(APIView):
         # filtered_list = filter(lambda x: x[1] >= average_accuracy*WEIGHT_COEFFICIENT, sorted_list)
         # filtered_questions = [x[0] for x in filtered_list]
 
-        sorted_list = sorted(questions, key=lambda q: Levenshtein.ratio(q.content, search), reverse=True)[:HIGHEST_ACCURATE_QUESTION_COUNT]
+
+        if method == 'edit':
+            sorted_list = sorted(questions, key=lambda q: Levenshtein.ratio(q.content, search), reverse=True)[:HIGHEST_ACCURATE_QUESTION_COUNT]
+
+        elif method == 'gpt':
+            search_vector = gpt.call_gpt_api(search)
+            sorted_list = sorted(questions, key=lambda q: cosine_similarity([q.vector], [search_vector]), reverse=True)[:HIGHEST_ACCURATE_QUESTION_COUNT]
+
         serializer = QuestionSerializer(sorted_list, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
 
