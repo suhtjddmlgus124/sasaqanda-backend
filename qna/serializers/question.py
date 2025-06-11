@@ -14,7 +14,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     def validate_image(self, value):
         ext = os.path.splitext(value.name)[1].lower()
-        if ext not in ['.png', '.jpg']:
+        if ext not in ['.png', '.jpg', '.jpeg']:
             raise serializers.ValidationError('PNG, JPG 파일만 업로드할 수 있습니다')
         return value
 
@@ -24,6 +24,6 @@ class QuestionImageSerializer(serializers.Serializer):
 
     def validate_image(self, value):
         ext = os.path.splitext(value.name)[1].lower()
-        if ext not in ['.png', '.jpg']:
+        if ext not in ['.png', '.jpg', '.jpeg']:
             raise serializers.ValidationError('PNG, JPG 파일만 업로드할 수 있습니다')
         return value
