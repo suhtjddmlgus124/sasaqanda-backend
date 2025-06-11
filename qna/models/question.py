@@ -25,7 +25,7 @@ class Question(models.Model):
 
     def get_content(self):
         data = ocr.call_ocr_api(self.image.open("rb"))
-        if data["status"] == 200:
+        if data["success"]:
             self.content = data["text"]
 
     def get_vector(self):

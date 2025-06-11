@@ -109,7 +109,7 @@ class QuestionImageConvertView(APIView):
         image = serializer.validated_data.get('image')
         data = ocr.call_ocr_api(image.open("rb"))
         user.token -= 1; user.save()
-        if data["status"] != 200:
-            return Response({'detail': data["error"]}, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        if not data["success"]:
+            return Response({'detail': data["error"]}, status.HTTP_400_BAD_REQUEST)
         
         return Response({'content': data["text"]}, status.HTTP_200_OK)

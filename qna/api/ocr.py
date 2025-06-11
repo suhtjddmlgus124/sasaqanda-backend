@@ -19,19 +19,11 @@ def call_ocr_api(file):
         },
     )
     data = response.json()
-
+    
     if response.status_code == 200:
-        return {
-            "status": response.status_code,
-            "confidence": data["confidence"],
-            "confidence_rate": data["confidence_rate"],
-            "text": data["text"],
-        }
-
+        if 'text' in data:
+            return {'success': True, 'text': data['text']}
+        else:
+            return {'success': False, 'error': data['error']}
     else:
-        return {
-            "status": response.status_code,
-            "confidence": 0,
-            "confidence_rate": 0,
-            "error": data["error"],
-        }
+        return {'success': False, 'error': 'Unknown Error'}
