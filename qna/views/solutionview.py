@@ -68,6 +68,9 @@ class StudentSolutionRetrieveDestroyView(APIView):
             return AUTHOR_ONLY_RESPONSE
         
         solution.delete()
+        user.mastery -= 2
+        user.token -= 1
+        user.save()
         return SUCCESS_RESPONSE
     
 

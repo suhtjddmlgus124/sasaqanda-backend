@@ -7,6 +7,7 @@ app_name = 'account'
 urlpatterns = [
     path('authentication/', authview.GoogleAuthenticationView.as_view(), name='authentication'),
     path('me/', infoview.UserIdentityView.as_view(), name='identity'),
+    path('me/solution/', infoview.MySolutionView.as_view(), name='solution')
     # path('authentication/', authview.AuthenticationView.as_view(), name='authentication'),
     # path('register/', authview.RegisterView.as_view(), name='register'),
 ]
