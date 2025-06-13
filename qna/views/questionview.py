@@ -59,7 +59,7 @@ class QuestionSearchView(APIView):
 
     def post(self, request):
         HIGHEST_ACCURATE_QUESTION_COUNT = 7
-        # WEIGHT_COEFFICIENT = 1.2
+        STANDARD_LENGTH = 20
 
         search = request.data.get('search')
         tags = request.data.get('tags')
@@ -83,7 +83,10 @@ class QuestionSearchView(APIView):
 
 
         if method == 'edit':
-            sorted_list = sorted(questions, key=lambda q: Levenshtein.ratio(q.content, search), reverse=True)[:HIGHEST_ACCURATE_QUESTION_COUNT]
+            if len(search) < STANDARD_LENGTH:        
+                sorted_list = sorted_list = sorted(filter(lambda q: search.replace(" ", "") in q.content.replace(" ", ""), questions), key=lambda q: Levenshtein.ratio(q.content, search), reverse=True)[:HIGHEST_ACCURATE_QUESTION_COUNT]
+            else:
+                sorted_list = sorted(questions, key=lambda q: Levenshtein.ratio(q.content, search), reverse=True)[:HIGHEST_ACCURATE_QUESTION_COUNT]
 
         elif method == 'gpt':
             search_vector = gpt.call_gpt_api(search)
